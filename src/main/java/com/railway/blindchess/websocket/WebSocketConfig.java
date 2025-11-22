@@ -14,6 +14,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ws/chess").setAllowedOrigins("*");
+        registry.addHandler(webSocketHandler, "/ws/chess").setAllowedOrigins("https://chessmate-production-5aae.up.railway.app");
     }
 }
