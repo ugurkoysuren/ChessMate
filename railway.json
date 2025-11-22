@@ -1,0 +1,12 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "apt-get update && apt-get install -y stockfish && mvn clean package -DskipTests"
+  },
+  "deploy": {
+    "startCommand": "java -jar target/blind-chess-1.0.0.jar",
+    "restartPolicyType": "ON_FAILURE",
+    "numReplicas": 1
+  }
+}
