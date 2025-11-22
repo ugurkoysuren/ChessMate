@@ -9,7 +9,7 @@ public class StockfishEngine {
     private Process stockfishProcess;
     private BufferedReader reader;
     private BufferedWriter writer;
-    private static final String STOCKFISH_PATH = System.getenv().getOrDefault("STOCKFISH_PATH", "stockfish");
+    private static final String STOCKFISH_PATH = System.getenv().getOrDefault("STOCKFISH_PATH", "/usr/games/stockfish");
 
     public void start() throws IOException {
         stockfishProcess = Runtime.getRuntime().exec(STOCKFISH_PATH);
