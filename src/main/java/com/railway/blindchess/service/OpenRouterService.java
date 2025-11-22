@@ -18,7 +18,7 @@ import java.util.Map;
 public class OpenRouterService {
 
     private static final String OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    private static final String MODEL = "x-ai/grok-2-1212";
+    private static final String MODEL = "openai/gpt-oss-safeguard-20b";
 
     @Value("${openrouter.api.key:}")
     private String apiKey;
@@ -53,7 +53,7 @@ public class OpenRouterService {
                     validation.getSanitizedPlayerName(),
                     currentEval
             );
-            String response = callGrok(prompt);
+            String response = callOpenRouter(prompt);
 
             String filteredResponse = securityService.filterOutput(response);
             if (filteredResponse == null) {
@@ -72,7 +72,7 @@ public class OpenRouterService {
                                Integer evalSwing, String playerName, String currentEval) {
         StringBuilder prompt = new StringBuilder();
         prompt.append("You are a witty chess commentator watching a game between ");
-        prompt.append(playerName).append(" and Stockfish engine. ");
+        prompt.append(playerName).append(" and ChessMate. ");
         prompt.append("Generate a short, engaging comment (1-2 sentences max) about the player's move.\n\n");
 
         prompt.append("Move played: ").append(move).append("\n");
@@ -101,7 +101,7 @@ public class OpenRouterService {
         return prompt.toString();
     }
 
-    private String callGrok(String prompt) throws Exception {
+    private String callOpenRouter(String prompt) throws Exception {
         String systemPrompt = """
                 You are a chess commentator. Your ONLY function is to comment on chess moves.
 
