@@ -28,6 +28,7 @@ public class StockfishEngine {
             "/opt/homebrew/bin/stockfish",  // macOS Homebrew (Apple Silicon)
             "/usr/local/bin/stockfish",      // macOS Homebrew (Intel) / Linux
             "/usr/bin/stockfish",            // Linux system-wide
+            "/usr/games/stockfish",          // Debian/Ubuntu games directory
             "stockfish"                      // In PATH
         };
 
@@ -168,5 +169,9 @@ public class StockfishEngine {
             sendCommand("quit");
             stockfishProcess.destroy();
         }
+    }
+
+    public boolean isRunning() {
+        return stockfishProcess != null && stockfishProcess.isAlive();
     }
 }

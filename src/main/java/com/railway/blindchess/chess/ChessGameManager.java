@@ -36,6 +36,7 @@ public class ChessGameManager {
             System.out.println("Stockfish engine started successfully");
         } catch (IOException e) {
             System.err.println("Failed to start Stockfish: " + e.getMessage());
+            System.err.println("The application will continue, but Stockfish features will be unavailable.");
         }
     }
 
@@ -54,7 +55,11 @@ public class ChessGameManager {
         broadcastGameState(game);
         if (playerSide == Side.BLACK) {
             try {
-                makeStockfishMove(playerId);
+                if (stockfish.isRunning()) {
+                    makeStockfishMove(playerId);
+                } else {
+                    System.err.println("Stockfish is not running, skipping opening move.");
+                }
             } catch (Exception e) {
                 System.err.println("Error making Stockfish opening move: " + e.getMessage());
             }
@@ -72,10 +77,12 @@ public class ChessGameManager {
 
         Integer evalBefore = game.getCurrentEvaluation();
         StockfishEngine.EvaluationResult bestMoveResult = null;
-        try {
-            bestMoveResult = stockfish.getBestMoveWithEvaluation(game.getFen(), 1000);
-        } catch (Exception e) {
-            System.err.println("Error getting best move evaluation: " + e.getMessage());
+        if (stockfish.isRunning()) {
+            try {
+                bestMoveResult = stockfish.getBestMoveWithEvaluation(game.getFen(), 1000);
+            } catch (Exception e) {
+                System.err.println("Error getting best move evaluation: " + e.getMessage());
+            }
         }
 
         Move move = parseMove(board, moveNotation);
@@ -86,14 +93,16 @@ public class ChessGameManager {
         game.setLastMoveTime(System.currentTimeMillis());
 
         Integer evalAfter = null;
-        try {
-            StockfishEngine.EvaluationResult afterEval = stockfish.getBestMoveWithEvaluation(game.getFen(), 500);
-            if (afterEval != null && afterEval.getCentipawns() != null) {
-                evalAfter = afterEval.getCentipawns();
-                game.setCurrentEvaluation(evalAfter);
+        if (stockfish.isRunning()) {
+            try {
+                StockfishEngine.EvaluationResult afterEval = stockfish.getBestMoveWithEvaluation(game.getFen(), 500);
+                if (afterEval != null && afterEval.getCentipawns() != null) {
+                    evalAfter = afterEval.getCentipawns();
+                    game.setCurrentEvaluation(evalAfter);
+                }
+            } catch (Exception e) {
+                System.err.println("Error getting position evaluation: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.err.println("Error getting position evaluation: " + e.getMessage());
         }
 
         MoveQuality quality = determineMoveQuality(moveNotation, bestMoveResult != null ? bestMoveResult.getBestMove() : null, evalBefore, evalAfter, game.getPlayerSide());
@@ -102,11 +111,24 @@ public class ChessGameManager {
         checkGameState(game);
         broadcastGameState(game);
 
-        if (!game.isGameOver()) return makeStockfishMove(gameId);
-        return "Game over: " + game.getResult();
+        if (!game.isGameOver() && stockfish.isRunning()) {
+            try {
+                return makeStockfishMove(gameId);
+            } catch (Exception e) {
+                return "Error making Stockfish move: " + e.getMessage();
+            }
+        }
+        
+        if (game.isGameOver()) {
+            return "Game over: " + game.getResult();
+        }
+        return "Move made successfully";
     }
 
     private String makeStockfishMove(String gameId) throws Exception {
+        if (!stockfish.isRunning()) {
+            throw new Exception("Stockfish is not running");
+        }
         ChessGameState game = activeGames.get(gameId);
         if (game == null || game.isGameOver()) return null;
 
