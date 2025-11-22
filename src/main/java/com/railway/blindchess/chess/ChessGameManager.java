@@ -166,10 +166,18 @@ public class ChessGameManager {
 
     private MoveQuality determineMoveQuality(String playerMove, String bestMove, Integer evalBefore, Integer evalAfter, Side playerSide) {
         if (evalBefore == null || evalAfter == null) return MoveQuality.GOOD;
-        if (playerMove.equalsIgnoreCase(bestMove)) return MoveQuality.BEST;
+        
         int evalChange = playerSide == Side.WHITE ? evalAfter - evalBefore : evalBefore - evalAfter;
+        
+        // If move matches Stockfish's suggestion AND the evaluation didn't drop significantly (more than 1 pawn), it's BEST.
+        // We verify eval stability because sometimes short-depth search suggests a move that deeper search reveals as a blunder.
+        if (bestMove != null && playerMove.equalsIgnoreCase(bestMove) && evalChange > -100) {
+            return MoveQuality.BEST;
+        }
+
         if (evalChange >= -25) return MoveQuality.BEST;
         if (evalChange >= -50) return MoveQuality.GOOD;
+        
         return MoveQuality.fromEvalLoss(Math.abs(Math.min(evalChange, 0)));
     }
 

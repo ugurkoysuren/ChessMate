@@ -121,7 +121,7 @@ public class OpenRouterService {
                         Map.of("role", "system", "content", systemPrompt),
                         Map.of("role", "user", "content", prompt)
                 ),
-                "max_tokens", 100,
+                "max_tokens", 1000,
                 "temperature", 0.8
         );
 
