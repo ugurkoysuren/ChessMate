@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blind Chess - Discord Bot</title>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>♟️ Blind Chess Discord Bot</h1>
+            <p class="subtitle">Play chess via Discord and watch the game live here!</p>
+        </header>
+
+        <div class="main-content">
+            <div class="board-section">
+                <div id="board" class="chess-board"></div>
+                <div class="board-controls">
+                    <button id="flipBoard" class="btn">Flip Board</button>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="status-card">
+                    <h2>Game Status</h2>
+                    <div id="gameStatus" class="status-content">
+                        <p class="waiting">Waiting for a game to start...</p>
+                        <p class="instructions">Use Discord commands to start playing!</p>
+                    </div>
+                </div>
+
+                <div class="game-info">
+                    <div class="info-item">
+                        <span class="label">Player:</span>
+                        <span id="playerName" class="value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Playing as:</span>
+                        <span id="playerSide" class="value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Current Turn:</span>
+                        <span id="currentTurn" class="value">-</span>
+                    </div>
+                </div>
+
+                <div class="moves-card">
+                    <h3>Move History</h3>
+                    <div id="moveHistory" class="move-list">
+                        <p class="empty">No moves yet</p>
+                    </div>
+                </div>
+
+                <div class="discord-commands">
+                    <h3>Discord Commands</h3>
+                    <code>!chess new [white|black]</code> - Start game<br>
+                    <code>!chess move &lt;move&gt;</code> - Make a move<br>
+                    <code>!chess show</code> - Show board<br>
+                    <code>!chess legal</code> - Show legal moves<br>
+                    <code>!chess resign</code> - Resign<br>
+                    <code>!chess help</code> - Show help
+                </div>
+            </div>
+        </div>
+
+        <div class="connection-status">
+            <span id="wsStatus" class="status-indicator disconnected">●</span>
+            <span id="wsStatusText">Connecting...</span>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
