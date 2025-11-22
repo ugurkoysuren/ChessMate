@@ -1,8 +1,11 @@
 [phases.setup]
-nixPkgs = ['...', 'stockfish']
+nixPkgs = ['stockfish', 'jdk17']
 
 [phases.build]
 cmds = ['mvn clean package -DskipTests']
 
 [start]
 cmd = 'java -jar target/blind-chess-1.0.0.jar'
+
+[variables]
+STOCKFISH_PATH = 'stockfish'
