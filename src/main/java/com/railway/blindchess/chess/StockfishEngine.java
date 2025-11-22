@@ -64,6 +64,7 @@ public class StockfishEngine {
             stockfishProcess = processBuilder.start();
             reader = new BufferedReader(new InputStreamReader(stockfishProcess.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(stockfishProcess.getOutputStream()));
+            System.out.println("Stockfish started successfully from: " + STOCKFISH_PATH);
         } catch (IOException e) {
             throw new IOException("Failed to start Stockfish at path: " + STOCKFISH_PATH + 
                 ". Please ensure Stockfish is installed and accessible. " +
